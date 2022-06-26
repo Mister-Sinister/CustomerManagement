@@ -8,7 +8,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group
 from .decorators import unauthenticated_user, allowed_users, admin_only
 # Create your views here.
 
@@ -21,14 +20,6 @@ def registerPage(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data.get('username')
-
-            group = Group.objects.get(name='customer')
-            user.groups.add(group)
-            # Added username after video because of error returning customer name if not added
-            Customer.objects.create(
-                user=user,
-                name=user.username,
-            )
 
             messages.success(request, 'Account was created for ' + username)
 
